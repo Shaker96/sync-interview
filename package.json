@@ -1,0 +1,17 @@
+{
+  "name": "sync-interview",
+  "private": true,
+  "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
+  "scripts": {
+    "test": "node --import tsx --test --test-reporter=spec \"test/**/*.test.ts\"",
+    "typecheck": "tsc --noEmit"
+  },
+  "devDependencies": {
+    "@types/node": "20.14.10",
+    "tsx": "4.16.2",
+    "typescript": "5.5.4"
+  }
+}
