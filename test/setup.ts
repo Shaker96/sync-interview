@@ -1,7 +1,7 @@
 import assert from 'node:assert/strict';
 import { MobileApp } from '../src/app.js';
 import { TestClock } from '../src/clock.js';
-import { Database } from '../src/database.js';
+import { Database, type Order } from '../src/database.js';
 import { SyncServer } from '../src/server.js';
 import { ImportService, WarehouseService } from '../src/services.js';
 
@@ -27,7 +27,16 @@ export function assertAppMatchesDatabase({ clock, db, app }: ReturnType<typeof s
   const wrong = db
     .all()
     .filter((order) => JSON.stringify(app.get(order.id)) !== JSON.stringify(order))
-    .map((order) => ({ database: order, app: app.get(order.id) ?? 'missing' }));
+    .map((order) => {
+      const inApp = app.get(order.id);
+      return { database: readable(order), app: inApp ? readable(inApp) : 'missing' };
+    });
 
   assert.deepEqual(wrong, [], 'the app does not match the database');
+}
+
+/** Shows Unix seconds next to the UTC time they stand for. */
+function readable(order: Order) {
+  const time = (seconds: number) => `${seconds} (${new Date(seconds * 1000).toISOString().replace('.000Z', ' UTC').replace('T', ' ')})`;
+  return { ...order, createdAt: time(order.createdAt), updatedAt: time(order.updatedAt) };
 }

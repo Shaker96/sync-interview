@@ -23,6 +23,35 @@ This repo is a small copy of that system. Everything runs in memory: no database
 | `test/scenarios.test.ts` | three short stories that end with the app out of date |
 | `test/busy-day.test.ts` | a full day of random activity |
 
+## How a sync works: an example
+
+Times are [Unix timestamps](https://www.unixtimestamp.com/) in seconds, like in the real system.
+`1793016000` is 2026-10-26 12:00:00 UTC.
+
+The database has three orders:
+
+| order | updatedAt | time (UTC) |
+|---|---|---|
+| A | 1793016000 | 12:00:00 |
+| B | 1793016000 | 12:00:00 |
+| C | 1793016004 | 12:00:04 |
+
+The app has never synced, and it asks for pages of 2 orders. The server sorts orders by `updatedAt`,
+then by `id`, and returns the ones **after** the checkpoint: a later `updatedAt`, or the same
+`updatedAt` with a greater `id`.
+
+| step | the app sends | the server returns | the app saves the checkpoint |
+|---|---|---|---|
+| 1 | no checkpoint | A, B | `(1793016000, B)` |
+| 2 | `(1793016000, B)` | C | `(1793016004, C)` |
+| 3 | `(1793016004, C)` | nothing | (the page was empty: this sync is done) |
+
+At 12:00:09 the warehouse changes order A, so A gets `updatedAt = 1793016009`. In the next sync the app
+sends `(1793016004, C)`, and the server returns A, because 1793016009 is later than 1793016004.
+
+That's the whole protocol. The tests in `test/scenarios.test.ts` show cases where it goes wrong;
+the first one is the shortest.
+
 ## Run it
 
 You need Node 22 or newer.

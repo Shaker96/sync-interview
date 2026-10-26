@@ -9,7 +9,7 @@ export const systemClock: Clock = {
 
 /** A clock the tests move by hand. */
 export class TestClock implements Clock {
-  constructor(private seconds = 1_000_000) {}
+  constructor(private seconds = 1_793_016_000) {}
 
   now(): number {
     return this.seconds;
