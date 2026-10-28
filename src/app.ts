@@ -7,7 +7,7 @@ import type { Checkpoint, SyncServer } from './server.js';
  * empty, keep every order received, save the checkpoint the server sends back.
  */
 export class MobileApp {
-  private readonly orders = new Map<string, Order>();
+  private readonly orders = new Map<number, Order>();
   private checkpoint: Checkpoint | null = null;
 
   constructor(private readonly server: SyncServer, private readonly pageSize = 5) {}
@@ -31,7 +31,7 @@ export class MobileApp {
     }
   }
 
-  get(id: string): Order | undefined {
+  get(id: number): Order | undefined {
     return this.orders.get(id);
   }
 }

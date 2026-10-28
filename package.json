@@ -6,7 +6,8 @@
     "node": ">=22"
   },
   "scripts": {
-    "test": "node --import tsx --test --test-reporter=spec \"test/**/*.test.ts\"",
+    "test": "node --import tsx --test --test-concurrency=1 --test-reporter=./test/reporter.mjs \"test/*.test.ts\"",
+    "test:scenarios": "node --import tsx --test --test-reporter=./test/reporter.mjs test/1-scenarios.test.ts",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {

@@ -8,9 +8,9 @@ test('two status changes in the same second', () => {
   const s = setup();
 
   s.clock.set(NOON);
-  s.warehouse.setStatus('B', 'Shipped');
+  s.warehouse.setStatus(102, 'Shipped');
   s.app.sync();
-  s.warehouse.setStatus('A', 'Shipped');
+  s.warehouse.setStatus(101, 'Shipped');
 
   assertAppMatchesDatabase(s);
 });
@@ -20,10 +20,10 @@ test('the import and the warehouse write in the same second', () => {
 
   s.clock.set(NOON);
   const batch = s.importer.startBatch();
-  batch.setTotal('A', 10);
-  batch.setTotal('C', 30);
+  batch.setTotal(101, 10);
+  batch.setTotal(103, 30);
   s.app.sync();
-  s.warehouse.setStatus('B', 'Shipped');
+  s.warehouse.setStatus(102, 'Shipped');
 
   assertAppMatchesDatabase(s);
 });
@@ -33,14 +33,14 @@ test('a long import batch', () => {
 
   s.clock.set(NOON);
   const batch = s.importer.startBatch();
-  batch.setTotal('A', 10);
+  batch.setTotal(101, 10);
 
   s.clock.set(NOON + 3);
-  s.warehouse.setStatus('C', 'Shipped');
+  s.warehouse.setStatus(103, 'Shipped');
 
   s.clock.set(NOON + 10);
   s.app.sync();
-  batch.setTotal('B', 20);
+  batch.setTotal(102, 20);
 
   assertAppMatchesDatabase(s);
 });

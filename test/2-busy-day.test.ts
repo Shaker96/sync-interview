@@ -11,7 +11,7 @@ for (const seed of [1, 2, 3, 4, 5]) {
   test(`busy day #${seed}`, () => {
     const s = setup();
     const random = seededRandom(seed);
-    const ids = Array.from({ length: 30 }, (_, i) => `order-${String(i).padStart(2, '0')}`);
+    const ids = Array.from({ length: 30 }, (_, i) => 101 + i);
     const anyId = () => ids[Math.floor(random() * ids.length)];
 
     let batch: ImportBatch | null = null;
@@ -34,6 +34,6 @@ for (const seed of [1, 2, 3, 4, 5]) {
       }
     }
 
-    assertAppMatchesDatabase(s);
+    assertAppMatchesDatabase(s, 1);
   });
 }

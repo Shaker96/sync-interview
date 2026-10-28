@@ -7,7 +7,7 @@ import type { Database } from './database.js';
 export class WarehouseService {
   constructor(private readonly db: Database, private readonly clock: Clock) {}
 
-  setStatus(id: string, status: string): void {
+  setStatus(id: number, status: string): void {
     this.db.write(id, { status }, this.clock.now());
   }
 }
@@ -27,7 +27,7 @@ export class ImportService {
 export class ImportBatch {
   constructor(private readonly db: Database, private readonly runAt: number) {}
 
-  setTotal(id: string, total: number): void {
+  setTotal(id: number, total: number): void {
     this.db.write(id, { total }, this.runAt);
   }
 }

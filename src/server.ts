@@ -1,7 +1,7 @@
 import type { Clock } from './clock.js';
 import type { Database, Order } from './database.js';
 
-export type Checkpoint = { updatedAt: number; id: string };
+export type Checkpoint = { updatedAt: number; id: number };
 
 export type PullRequest = { checkpoint: Checkpoint | null; limit: number };
 
@@ -28,7 +28,7 @@ export class SyncServer {
           order.updatedAt > checkpoint.updatedAt ||
           (order.updatedAt === checkpoint.updatedAt && order.id > checkpoint.id),
       )
-      .sort((a, b) => a.updatedAt - b.updatedAt || (a.id < b.id ? -1 : a.id > b.id ? 1 : 0))
+      .sort((a, b) => a.updatedAt - b.updatedAt || a.id - b.id)
       .slice(0, limit);
 
     const last = changed.at(-1);
